@@ -155,7 +155,7 @@
 
 6. **终结状态集 <img src="./assets/F.gif"/>**。以 `#F` 开头。各状态之间以英文逗号 `','` 分隔。语法格式为 `#F = {f1,f2,...,fn}`。示例：
     ```
-    #F = {halt_accept,halt_reject}
+    #F = {halt_accept}
     ```
 
 7. **转移函数 <img src="./assets/d.gif"/>**：

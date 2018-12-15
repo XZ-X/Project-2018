@@ -17,7 +17,7 @@
 #B = _
 
 ; the set of final states
-#F = {halt_accept,halt_reject}
+#F = {halt_accept}
 
 ; the transition functions
 
