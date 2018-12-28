@@ -27,19 +27,35 @@ public class Transition {
      * @param tape     type of the TM
      * @return new state
      */
-    public String transition(String curState, Tape tape) {
+    public String transition(String curState, Tape tape) throws HaltException {
         char tapeSymbol = tape.read();
         Domain domain = new Domain();
         domain.setState(curState);
         domain.setTapeSymbol(tapeSymbol);
+
         Range range = tf.get(domain);
+
+        if (range == null) {
+            // if the transition doesn't contains the specific
+            domain.setTapeSymbol('*');
+            range = tf.get(domain);
+        }
+
+        if (range == null) {
+            throw new HaltException("Unknown transition function of domain " + domain);
+        }
+
+        //modify the tape
         tape.write(range.getToWrite());
+        //move the header
         switch (range.getDirection()) {
             case LEFT:
                 tape.left();
                 break;
             case RIGHT:
                 tape.right();
+                break;
+            case STAY:
                 break;
             default:
                 throw new RuntimeException();

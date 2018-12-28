@@ -1,11 +1,17 @@
 package model;
 
-import java.util.*;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author XiangzheXu
  * create-time: 2018/12/21
  */
+@Data
 public class Tape {
     /**
      * the tape from -inf to -1, the head
@@ -20,11 +26,16 @@ public class Tape {
     private ArrayList<Character> right = new ArrayList<>();
 
 
+    private Set<Character> inputSymbols = new HashSet<>();
+
+    private Set<Character> tapeSymbols = new HashSet<>();
+
     private int head = 0;
 
 
     /**
      * reset the tape
+     *
      * @param string input string
      */
     public void reset(String string) {
@@ -39,7 +50,7 @@ public class Tape {
     /**
      * read the character the head points to
      */
-    public char read(){
+    public char read() {
         if (head < 0) {
             //head is at the left half
             int idx = Math.abs(head);
@@ -49,10 +60,10 @@ public class Tape {
                 return '_';
             } else {
                 //head point to non-blank
-                return left.get(idx-1);
+                return left.get(idx - 1);
             }
 
-        }else{
+        } else {
             //head is at the right half
             int idx = Math.abs(head);
             //the right half begins from 0
@@ -68,9 +79,13 @@ public class Tape {
 
     /**
      * write a character to where the head points to
+     * <p>
      * if the head points to end blanks, the
      * blanks between the head and non-blank will
      * be added
+     * <p>
+     * if the character to write is wildcard, do not change the tape symbol
+     *
      * @param c character to write
      */
     public void write(char c) {
@@ -78,10 +93,16 @@ public class Tape {
         if (head < 0) {
             int idx = Math.abs(head);
             //this list begins from -1
-            left.set(idx - 1, c);
-        }else{
+            //if the character is wildcard, do nothing
+            if (c != '*') {
+                left.set(idx - 1, c);
+            }
+        } else {
             //this list begins from 0
-            right.set(head, c);
+            //wildcard
+            if (c != '*') {
+                right.set(head, c);
+            }
         }
     }
 
@@ -111,10 +132,10 @@ public class Tape {
                     left.add('_');
                 }
             }
-        }else{
+        } else {
             if (head >= right.size()) {
-                int numbersToAdd = head - (right.size() -1);
-                for (int i = numbersToAdd; i >0; i--) {
+                int numbersToAdd = head - (right.size() - 1);
+                for (int i = numbersToAdd; i > 0; i--) {
                     right.add('_');
                 }
             }
