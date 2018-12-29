@@ -38,11 +38,14 @@ public class Tape {
      *
      * @param string input string
      */
-    public void reset(String string) {
+    public void reset(String string) throws InputErrorException {
         this.head = 0;
         this.left = new ArrayList<>();
         this.right = new ArrayList<>();
         for (Character c : string.toCharArray()) {
+            if (!inputSymbols.contains(c)) {
+                throw new InputErrorException("Unsupported character " + c);
+            }
             right.add(c);
         }
     }

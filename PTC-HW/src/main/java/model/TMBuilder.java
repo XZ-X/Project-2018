@@ -12,13 +12,14 @@ import java.util.stream.Collectors;
  * @author XiangzheXu
  * create-time: 2018/12/28
  */
-public class InputProcessor {
+public class TMBuilder {
     private Set<String> stateSet = new HashSet<>();
     private Set<Character> inputCharSet = new HashSet<>();
     private Set<Character> tapeCharSet = new HashSet<>();
     private String q0 = null;
     private Set<String> finalStates = new HashSet<>();
     private Transition transition = new Transition();
+
 
     /**
      * build the TM from the input file
@@ -49,19 +50,60 @@ public class InputProcessor {
                 parseEffectiveLine(effectiveLine);
 
             }
-            TM tm = new TM();
-            tm.setStateSet(stateSet);
-            tm.setTransition(transition);
-            Tape tape = new Tape();
-            tape.setInputSymbols(inputCharSet);
-            tape.setTapeSymbols(tapeCharSet);
-            tm.setTape(tape);
-            return tm;
+            TM tm = buildTM();
+            if (checkGrammar()) {
+                return tm;
+            } else {
+                throw new DefinitionException("Grammar error!");
+            }
         } catch (FileNotFoundException e) {
             System.err.println("Fail to open file " + file);
         }
 
         return null;
+    }
+
+    private boolean checkGrammar() {
+        if (stateSet.isEmpty() || inputCharSet.isEmpty() || tapeCharSet.isEmpty() || q0 == null || finalStates.isEmpty()) {
+            return false;
+        }
+        boolean initStateValid = stateSet.contains(q0);
+        boolean finalStateValid = stateSet.containsAll(finalStates);
+        boolean tapeCharSetValid = tapeCharSet.containsAll(inputCharSet);
+        Map<Domain, Range> tf = transition.getTf();
+        Set<Map.Entry<Domain, Range>> entries = tf.entrySet();
+        Set<String> domainState = entries.stream()
+                .map(Map.Entry::getKey)
+                .map(Domain::getState)
+                .collect(Collectors.toSet());
+        Set<Character> domainCharSet = entries.stream()
+                .map(Map.Entry::getKey)
+                .map(Domain::getTapeSymbol)
+                .filter(character -> character != '*')
+                .collect(Collectors.toSet());
+        Set<String> rangeStates = entries.stream()
+                .map(Map.Entry::getValue)
+                .map(Range::getNextState)
+                .collect(Collectors.toSet());
+        Set<Character> rangeCharSet = entries.stream()
+                .map(Map.Entry::getValue)
+                .map(Range::getToWrite)
+                .filter(character -> character != '*')
+                .collect(Collectors.toSet());
+
+        boolean tfValid = stateSet.containsAll(domainState)
+                && stateSet.containsAll(rangeStates)
+                && tapeCharSet.containsAll(domainCharSet)
+                && tapeCharSet.containsAll(rangeCharSet);
+
+        return initStateValid && finalStateValid && tapeCharSetValid && tfValid;
+    }
+
+    private TM buildTM() {
+        Tape tape = new Tape();
+        tape.setInputSymbols(inputCharSet);
+        tape.setTapeSymbols(tapeCharSet);
+        return new TM(transition, tape, stateSet, q0, finalStates);
     }
 
     /**

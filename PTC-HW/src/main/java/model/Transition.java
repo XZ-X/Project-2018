@@ -1,5 +1,7 @@
 package model;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +9,7 @@ import java.util.Map;
  * @author XiangzheXu
  * create-time: 2018/12/21
  */
+@Data
 public class Transition {
     private Map<Domain, Range> tf = new HashMap<>();
 

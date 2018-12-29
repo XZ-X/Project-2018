@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+mvn package assembly:single |grep "\[INFO\] BUILD .*"
+cp target/*-dependencies.jar ./turing.jar
+if [[ -n "$1" ]];
+then
+java -jar turing.jar $1
+else
+echo "SPECIFY a directory!"
+fi
