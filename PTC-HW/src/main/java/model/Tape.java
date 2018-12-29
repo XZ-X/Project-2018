@@ -148,47 +148,53 @@ public class Tape {
 
     public void printID(PrintWriter writer) {
         trim();
+        PrintRange printRange = calPrintRange();
+        printRange.adjust(head);
         addBlanks();
         StringBuilder index = new StringBuilder("Index :");
         StringBuilder tape = new StringBuilder("Tape  :");
         StringBuilder headPosition = new StringBuilder("Head  :");
+        boolean space = true;
         int leftIdx = left.size();
         for (; leftIdx > 0; leftIdx--) {
-            index.append(" ").append(leftIdx);
-            tape.append(" ").append(left.get(leftIdx - 1));
-            headPosition.append(" ");
-
-            if (head < 0 && Math.abs(head) == leftIdx) {
-                headPosition.append("^");
-            } else {
-                headPosition.append(" ");
-            }
-
-            //align
-            for (int i = (int) Math.log10(leftIdx); i > 0; i--) {
-                tape.append(' ');
-                headPosition.append(' ');
-            }
-        }
-
-        if (right.size() != 0) {
-            for (int i = 0; i < right.size(); i++) {
-                index.append(" ").append(i);
-                tape.append(" ").append(right.get(i));
+            if (printRange.leftIn(leftIdx - 1)) {
+                index.append(" ").append(leftIdx);
+                tape.append(" ").append(left.get(leftIdx - 1));
                 headPosition.append(" ");
 
-                if (head == i) {
+                if (head < 0 && Math.abs(head) == leftIdx) {
                     headPosition.append("^");
                 } else {
                     headPosition.append(" ");
                 }
 
                 //align
-                for (int pad = (int) Math.log10(leftIdx); pad > 0; pad--) {
+                for (int i = (int) Math.log10(leftIdx); i > 0; i--) {
                     tape.append(' ');
                     headPosition.append(' ');
                 }
+            }
+        }
 
+        if (right.size() != 0) {
+            for (int i = 0; i < right.size(); i++) {
+                if (printRange.rightIn(i)) {
+                    index.append(" ").append(i);
+                    tape.append(" ").append(right.get(i));
+                    headPosition.append(" ");
+
+                    if (head == i) {
+                        headPosition.append("^");
+                    } else {
+                        headPosition.append(" ");
+                    }
+
+                    //align
+                    for (int pad = (int) Math.log10(leftIdx); pad > 0; pad--) {
+                        tape.append(' ');
+                        headPosition.append(' ');
+                    }
+                }
             }
         }
         writer.println(index);
@@ -197,15 +203,22 @@ public class Tape {
 
     }
 
+
     public void printResult(PrintWriter writer) {
         trim();
+        PrintRange printRange = calPrintRange();
         StringBuilder content = new StringBuilder();
-        for (Character c : left) {
-            content.insert(0, c);
+        if (printRange.lr != -1 && printRange.ll != -1) {
+            for (int i = printRange.lr; i >= printRange.ll; i--) {
+                content.append(left.get(i));
+            }
         }
-        for (Character c : right) {
-            content.append(c);
+        if (printRange.rl != -1 && printRange.rr != -1) {
+            for (int i = printRange.rl; i <= printRange.rr; i++) {
+                content.append(right.get(i));
+            }
         }
+
         content.insert(0, "Result: ");
         writer.println(content);
     }
@@ -219,6 +232,7 @@ public class Tape {
             left.remove(leftIdx - 1);
         }
 
+
         int rightIdx = right.size();
         for (; rightIdx > 0; rightIdx--) {
             if (right.get(rightIdx - 1) != '_') {
@@ -226,6 +240,43 @@ public class Tape {
             }
             right.remove(rightIdx - 1);
         }
+
+    }
+
+    private PrintRange calPrintRange() {
+        PrintRange printRange = new PrintRange();
+        boolean leftEmpty = left.isEmpty();
+        boolean rightEmpty = right.isEmpty();
+        if (leftEmpty) {
+            printRange.ll = printRange.lr = -1;
+        }
+        if (rightEmpty) {
+            printRange.rl = printRange.rr = -1;
+        }
+        if (!leftEmpty && rightEmpty) {
+            printRange.ll = left.size() - 1;
+            for (int i = 0; i < left.size(); i++) {
+                if (left.get(i) != '_') {
+                    printRange.lr = i;
+                    break;
+                }
+                printRange.lr = i;
+            }
+        } else if (leftEmpty && !rightEmpty) {
+            printRange.rr = right.size() - 1;
+            for (int i = 0; i < right.size(); i++) {
+                if (right.get(i) != '_') {
+                    printRange.rl = i;
+                    break;
+                }
+                printRange.rl = i;
+            }
+        } else if (!(leftEmpty || rightEmpty)) {
+            printRange.rl = printRange.lr = 0;
+            printRange.ll = left.size() - 1;
+            printRange.rr = right.size() - 1;
+        }
+        return printRange;
     }
 
     @Override
@@ -234,5 +285,53 @@ public class Tape {
         String ret = left.toString() + right.toString();
         Collections.reverse(left);
         return ret;
+    }
+}
+
+class PrintRange {
+    int ll;
+    int lr;
+    int rl;
+    int rr;
+
+    boolean leftIn(int idx) {
+        return idx >= lr && idx <= ll;
+    }
+
+    boolean rightIn(int idx) {
+        return idx >= rl && idx <= rr;
+    }
+
+    void adjust(int head) {
+        if (head >= 0 && !rightIn(head)) {
+            boolean leftEmpty = ll == -1 || lr == -1;
+            if (head < rl) {
+                rl = head;
+                if (rr == -1) {
+                    rr = rl;
+                }
+            } else {
+                rr = head;
+                if (leftEmpty && rl == -1) {
+                    rl = rr;
+                }
+            }
+        } else if (head < 0 && !leftIn(head)) {
+            int lhead = Math.abs(head) - 1;
+            boolean rightEmpty = rr == -1 || rl == -1;
+            if (lhead > ll) {
+                ll = lhead;
+                if (rightEmpty && lr == -1) {
+                    lr = ll;
+                }
+            } else {
+                //head<lr
+                lr = lhead;
+                //ll==-1 is always false
+//                if (ll == -1) {
+//                    ll = lr;
+//                }
+            }
+        }
     }
 }

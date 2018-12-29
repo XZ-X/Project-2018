@@ -23,6 +23,7 @@ public class Problem {
 
         TMBuilder TMBuilder = new TMBuilder();
         TM tm = TMBuilder.parseInput(tmFile);
+        startTest(tm);
 
 
     }
@@ -54,6 +55,8 @@ public class Problem {
 
 
             }
+            console.flush();
+            result.flush();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
