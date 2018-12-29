@@ -209,7 +209,7 @@ public class Tape {
         PrintRange printRange = calPrintRange();
         StringBuilder content = new StringBuilder();
         if (printRange.lr != -1 && printRange.ll != -1) {
-            for (int i = printRange.lr; i >= printRange.ll; i--) {
+            for (int i = printRange.ll; i >= printRange.lr; i--) {
                 content.append(left.get(i));
             }
         }
@@ -295,11 +295,11 @@ class PrintRange {
     int rr;
 
     boolean leftIn(int idx) {
-        return idx >= lr && idx <= ll;
+        return idx >= lr && idx <= ll && idx >= 0;
     }
 
     boolean rightIn(int idx) {
-        return idx >= rl && idx <= rr;
+        return idx >= rl && idx <= rr && idx >= 0;
     }
 
     void adjust(int head) {
@@ -316,7 +316,7 @@ class PrintRange {
                     rl = rr;
                 }
             }
-        } else if (head < 0 && !leftIn(head)) {
+        } else if (head < 0 && !leftIn(Math.abs(head) - 1)) {
             int lhead = Math.abs(head) - 1;
             boolean rightEmpty = rr == -1 || rl == -1;
             if (lhead > ll) {

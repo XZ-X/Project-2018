@@ -49,6 +49,7 @@ public class TM {
                 pc++;
             } catch (HaltException e) {
                 tape.printResult(writer);
+                writer.println("==================== END ====================");
                 throw e;
             }
             printID(writer);
