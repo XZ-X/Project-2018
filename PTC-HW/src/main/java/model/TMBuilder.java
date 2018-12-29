@@ -92,6 +92,7 @@ public class TMBuilder {
                 .map(Range::getToWrite)
                 .filter(character -> character != '*')
                 .collect(Collectors.toSet());
+        System.out.println(rangeStates.toString().replace(" ", ""));
 
         boolean tfValid = stateSet.containsAll(domainState)
                 && stateSet.containsAll(rangeStates)

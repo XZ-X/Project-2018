@@ -1,7 +1,7 @@
 ; 1^mx1^n=1^{m*n}
 
 ; the finite set of states
-#Q = {l1,l2,l3,l4,l5,l6,r1,r2,r3,r4,r5,r6,r7,ac,w2,w3,w4,w5,w6,mv}
+#Q = {ps,d1r,finalCheck,finishMul,pA,pE,rej,Rm,Lm,pR,ac,recover,err,afterX,pU,Rx,el,isEmpty,checkRight,R=,dMul,L=,beforeX,pe,after=,pl,checkExit,d1l}
 
 ; check 1*x1*=1*
 
@@ -26,12 +26,15 @@ checkExit * * * d1l
 
 ; delete 1 from left
 
-d1l 1 _ r Rx
+d1l 1 _ r R=
+
 d1l x x * finishMul
 
 ; move right to the =
 
 R= 1 1 r R=
+R= x x r dMul
+
 R= = = l dMul
 
 ; simulate the multiply
@@ -58,7 +61,7 @@ d1r = = * err
 L= 1 1 l L=
 L= = = l dMul
 
-finishMul * * *
+finishMul * * * finalCheck
 
 finalCheck x _ r finalCheck
 finalCheck 1 _ r finalCheck
@@ -87,7 +90,7 @@ pe _ e r rej
 #S = {0,1,x,=}
 
 ; the complete set of tape symbols
-#T = {0,1,_,T,r,u,e,F,a,l,s}
+#T = {0,1,_,T,r,u,e,F,a,l,s,x,=}
 
 ; the start state
 #q0 = beforeX

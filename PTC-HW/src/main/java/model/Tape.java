@@ -155,7 +155,6 @@ public class Tape {
         StringBuilder index = new StringBuilder("Index :");
         StringBuilder tape = new StringBuilder("Tape  :");
         StringBuilder headPosition = new StringBuilder("Head  :");
-        boolean space = true;
         int leftIdx = left.size();
         for (; leftIdx > 0; leftIdx--) {
             if (printRange.leftIn(leftIdx - 1)) {
