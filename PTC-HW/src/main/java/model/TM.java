@@ -2,6 +2,7 @@ package model;
 
 import lombok.Data;
 
+import java.io.PrintWriter;
 import java.util.Set;
 
 /**
@@ -38,5 +39,29 @@ public class TM {
         this.tape.reset(input);
         this.currentState = initState;
         this.pc = 0;
+    }
+
+    public void run(PrintWriter writer) throws HaltException {
+        printID(writer);
+        while (!acceptingState.contains(currentState)) {
+            try {
+                currentState = transition.transition(currentState, tape);
+                pc++;
+            } catch (HaltException e) {
+                tape.printResult(writer);
+                throw e;
+            }
+            printID(writer);
+        }
+        tape.printResult(writer);
+        writer.println("==================== END ====================");
+    }
+
+    private void printID(PrintWriter writer) {
+        writer.println("Step  : " + pc);
+        tape.printID(writer);
+        writer.println("State : " + currentState);
+        writer.println("---------------------------------------------");
+
     }
 }

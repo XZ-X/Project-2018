@@ -2,6 +2,7 @@ package model;
 
 import lombok.Data;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -142,6 +143,88 @@ public class Tape {
                     right.add('_');
                 }
             }
+        }
+    }
+
+    public void printID(PrintWriter writer) {
+        trim();
+        addBlanks();
+        StringBuilder index = new StringBuilder("Index :");
+        StringBuilder tape = new StringBuilder("Tape  :");
+        StringBuilder headPosition = new StringBuilder("Head  :");
+        int leftIdx = left.size();
+        for (; leftIdx > 0; leftIdx--) {
+            index.append(" ").append(leftIdx);
+            tape.append(" ").append(left.get(leftIdx - 1));
+            headPosition.append(" ");
+
+            if (head < 0 && Math.abs(head) == leftIdx) {
+                headPosition.append("^");
+            } else {
+                headPosition.append(" ");
+            }
+
+            //align
+            for (int i = (int) Math.log10(leftIdx); i > 0; i--) {
+                tape.append(' ');
+                headPosition.append(' ');
+            }
+        }
+
+        if (right.size() != 0) {
+            for (int i = 0; i < right.size(); i++) {
+                index.append(" ").append(i);
+                tape.append(" ").append(right.get(i));
+                headPosition.append(" ");
+
+                if (head == i) {
+                    headPosition.append("^");
+                } else {
+                    headPosition.append(" ");
+                }
+
+                //align
+                for (int pad = (int) Math.log10(leftIdx); pad > 0; pad--) {
+                    tape.append(' ');
+                    headPosition.append(' ');
+                }
+
+            }
+        }
+        writer.println(index);
+        writer.println(tape);
+        writer.println(headPosition);
+
+    }
+
+    public void printResult(PrintWriter writer) {
+        trim();
+        StringBuilder content = new StringBuilder();
+        for (Character c : left) {
+            content.insert(0, c);
+        }
+        for (Character c : right) {
+            content.append(c);
+        }
+        content.insert(0, "Result: ");
+        writer.println(content);
+    }
+
+    private void trim() {
+        int leftIdx = left.size();
+        for (; leftIdx > 0; leftIdx--) {
+            if (left.get(leftIdx - 1) != '_') {
+                break;
+            }
+            left.remove(leftIdx - 1);
+        }
+
+        int rightIdx = right.size();
+        for (; rightIdx > 0; rightIdx--) {
+            if (right.get(rightIdx - 1) != '_') {
+                break;
+            }
+            right.remove(rightIdx - 1);
         }
     }
 

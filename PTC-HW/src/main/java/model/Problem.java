@@ -36,10 +36,22 @@ public class Problem {
                 String testcase = scanner.nextLine();
                 try {
                     tm.reset(testcase);
+                    console.println("Input: " + testcase);
+                    console.println("==================== RUN ====================");
                 } catch (InputErrorException e) {
                     inputError(console, testcase);
                     result.println("Error");
+                    continue;
                 }
+
+                try {
+                    tm.run(console);
+                    result.println("True");
+                } catch (HaltException e) {
+                    result.println("False");
+                }
+
+
 
             }
         } catch (FileNotFoundException e) {
