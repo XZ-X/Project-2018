@@ -7,14 +7,16 @@
 
 beforeX 1 1 r beforeX
 beforeX x x r afterX
-beforeX * * r err
+beforeX * * * err
 
 afterX 1 1 r afterX
 afterX = = r after=
-beforeX * * r err
+beforeX * * * err
 
 after= 1 1 r after=
 after= _ _ l checkRight
+after= * * * err
+
 checkRight * * l checkRight
 checkRight _ _ r checkExit
 
@@ -50,12 +52,34 @@ Rm * * r Rm
 Rm _ _ l d1r
 
 d1r 1 _ l L=
-d1r = _ l err
+d1r = = * err
 
 ; move to the next 1 at the RHS of x
 L= 1 1 l L=
 L= = = l dMul
 
+finishMul * * *
+
+finalCheck x _ r finalCheck
+finalCheck 1 _ r finalCheck
+finalCheck = _ r isEmpty
+isEmpty _ T r pR
+pR _ r r pU
+pU _ u r pE
+pE _ e r ac
+
+isEmpty * e * err
+
+; move to the rightmost
+err * * r err
+; move to the leftmost
+err _ _ l el
+el * _ l el
+el _ F r pA
+pA _ a r pl
+pl _ l r ps
+ps _ s r pe
+pe _ e r rej
 
 
 
@@ -66,7 +90,7 @@ L= = = l dMul
 #T = {0,1,_,T,r,u,e,F,a,l,s}
 
 ; the start state
-#q0 = l1
+#q0 = beforeX
 
 ; the blank symbol
 #B = _
