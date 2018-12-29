@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.InputErrorException;
 import lombok.Data;
 
 import java.io.PrintWriter;

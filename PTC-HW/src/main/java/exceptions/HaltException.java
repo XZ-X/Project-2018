@@ -1,4 +1,4 @@
-package model;
+package exceptions;
 
 import java.io.IOException;
 

@@ -1,5 +1,8 @@
 package model;
 
+import exceptions.HaltException;
+import exceptions.InputErrorException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

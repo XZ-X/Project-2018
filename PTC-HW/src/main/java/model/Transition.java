@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.HaltException;
 import lombok.Data;
 
 import java.util.HashMap;

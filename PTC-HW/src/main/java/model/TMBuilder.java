@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.DefinitionException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
