@@ -190,7 +190,7 @@ public class Tape {
                     }
 
                     //align
-                    for (int pad = (int) Math.log10(leftIdx); pad > 0; pad--) {
+                    for (int pad = (int) Math.log10(i); pad > 0; pad--) {
                         tape.append(' ');
                         headPosition.append(' ');
                     }

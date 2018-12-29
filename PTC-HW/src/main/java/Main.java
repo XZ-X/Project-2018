@@ -16,7 +16,7 @@ public class Main {
 //            exit(-1);
 //        }
 //        File testDir = new File(args[0]);
-        File testDir = new File("PTC-HW/fuzzing-test");
+        File testDir = new File("PTC-HW/long-test");
         if (!testDir.isDirectory()) {
             System.err.println(args[0] + " is not a directory");
             exit(-1);
