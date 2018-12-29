@@ -28,8 +28,10 @@ q1 X X l q5
 
 q8 * * l q8
 q8 _ _ r q9
-q8 Z _ r q9
+q8 Z Z r q9
 q9 b Z r q10
+; expected the letter b but found a
+q9 a a * err
 q10 * * r q10
 q10 Y b r q11
 ; expected the letter b(Y) but found a(X)
@@ -50,6 +52,8 @@ q5 * * l q5
 q5 _ _ r q6
 q5 Z Z r q6
 q6 a Z r q7
+;err
+q6 b b * err
 q7 * * r q7
 q7 X a r q11
 q7 Y Y * err
