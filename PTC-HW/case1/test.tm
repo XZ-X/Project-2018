@@ -1,7 +1,7 @@
 ; 1^mx1^n=1^{m*n}
 
 ; the finite set of states
-#Q = {ps,d1r,finalCheck,finishMul,pA,pE,rej,Rm,Lm,pR,ac,recover,err,afterX,pU,Rx,el,isEmpty,checkRight,R=,dMul,L=,beforeX,pe,after=,pl,checkExit,d1l}
+#Q = {ps,d1r,finalCheck,finishMul,pA,pE,rej,Rm,Lm,pR,ac,recover,err,afterX,afterX1,pU,Rx,el,isEmpty,checkRight,R=,dMul,L=,beforeX,pe,after=,pl,checkExit,d1l}
 
 ; check 1*x1*=1*
 
@@ -9,9 +9,10 @@ beforeX 1 1 r beforeX
 beforeX x x r afterX
 beforeX * * * err
 
-afterX 1 1 r afterX
-afterX = = r after=
-beforeX * * * err
+afterX 1 1 r afterX1
+afterX1 = = r after=
+afterX1 * * * err
+afterX * * * err
 
 after= 1 1 r after=
 after= _ _ l checkRight
@@ -69,7 +70,7 @@ finalCheck = _ r isEmpty
 isEmpty _ T r pR
 pR _ r r pU
 pU _ u r pE
-pE _ e r ac
+pE _ e * ac
 
 isEmpty * e * err
 
