@@ -11,12 +11,12 @@ import static java.lang.System.exit;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-//        if (args.length == 0) {
-//            System.err.println("Please specify a directory!");
-//            exit(-1);
-//        }
-//        File testDir = new File(args[0]);
-        File testDir = new File("PTC-HW/case2");
+        if (args.length == 0) {
+            System.err.println("Please specify a directory!");
+            exit(-1);
+        }
+        File testDir = new File(args[0]);
+//        File testDir = new File("PTC-HW/case2");
         if (!testDir.isDirectory()) {
             System.err.println(args[0] + " is not a directory");
             exit(-1);
