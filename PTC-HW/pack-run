@@ -5,5 +5,10 @@ if [[ -n "$1" ]];
 then
 java -jar turing.jar $1
 else
-echo "SPECIFY a directory!"
+java -jar turing.jar case1
+java -jar turing.jar case2
+java -jar turing.jar fuzzing-case
+java -jar turing.jar long-case
+java -jar turing.jar official-case
+tar -cvf final.tar case1 case2 fuzzing-case long-case official-case
 fi

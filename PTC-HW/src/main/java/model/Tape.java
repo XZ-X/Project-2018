@@ -197,9 +197,9 @@ public class Tape {
                 }
             }
         }
-        writer.println(index);
-        writer.println(tape);
-        writer.println(headPosition);
+        writer.println(new String(index).trim());
+        writer.println(new String(tape).trim());
+        writer.println(new String(headPosition).trim());
 
     }
 
@@ -305,6 +305,9 @@ class PrintRange {
     void adjust(int head) {
         if (head >= 0 && !rightIn(head)) {
             boolean leftEmpty = ll == -1 || lr == -1;
+            if (!leftEmpty) {
+                lr = 0;
+            }
             if (head < rl) {
                 rl = head;
                 if (rr == -1) {
@@ -319,6 +322,9 @@ class PrintRange {
         } else if (head < 0 && !leftIn(Math.abs(head) - 1)) {
             int lhead = Math.abs(head) - 1;
             boolean rightEmpty = rr == -1 || rl == -1;
+            if (!rightEmpty) {
+                rl = 0;
+            }
             if (lhead > ll) {
                 ll = lhead;
                 if (rightEmpty && lr == -1) {
